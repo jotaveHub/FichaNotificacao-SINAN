@@ -1,0 +1,35 @@
+package br.edu.ifpb.fichanotificacaosinan.controller;
+
+import br.edu.ifpb.fichanotificacaosinan.model.Notificacao;
+import br.edu.ifpb.fichanotificacaosinan.service.NotificacaoService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+
+@RestController
+@RequestMapping("/notificacao")
+public class NotificacaoController {
+
+    private final NotificacaoService service;
+
+    public NotificacaoController(NotificacaoService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    public ResponseEntity<Notificacao> criar(@RequestBody Notificacao notificacao) {
+        Notificacao criada = service.criar(notificacao);
+
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(criada.getId())
+                .toUri();
+
+        return ResponseEntity.created(location).body(criada);
+    }
+}
