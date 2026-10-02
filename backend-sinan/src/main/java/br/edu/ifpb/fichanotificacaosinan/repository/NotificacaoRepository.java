@@ -24,6 +24,16 @@ public class NotificacaoRepository {
                 .filter(n -> n.getId().equals(id))
                 .findFirst();
     }
+    public synchronized Optional<Notificacao> atualizar(Long id, Notificacao notificacao) {
+        for (int i = 0; i < notificacoes.size(); i++) {
+            if (notificacoes.get(i).getId().equals(id)) {
+                notificacao.setId(id);
+                notificacoes.set(i, notificacao);
+                return Optional.of(notificacao);
+            }
+        }
+        return Optional.empty();
+    }
 
     public synchronized boolean remover(Long id) {
         return notificacoes.removeIf(n -> n.getId().equals(id));
