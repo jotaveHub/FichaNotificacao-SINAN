@@ -4,6 +4,7 @@ public class DadosResidencia {
 
     private String uf;
     private String municipio;
+    private String codigoIbge;
     private String distrito;
     private String bairro;
     private String logradouro;
@@ -31,6 +32,14 @@ public class DadosResidencia {
 
     public void setMunicipio(String municipio) {
         this.municipio = municipio;
+    }
+
+    public String getCodigoIbge() {
+        return codigoIbge;
+    }
+
+    public void setCodigoIbge(String codigoIbge) {
+        this.codigoIbge = codigoIbge;
     }
 
     public String getDistrito() {
