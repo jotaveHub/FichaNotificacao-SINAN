@@ -21,4 +21,8 @@ public class NotificacaoService {
     public Optional<Notificacao> buscarPorId(Long id) {
         return repository.buscarPorId(id);
     }
+
+    public Optional<Notificacao> atualizar(Long id, Notificacao notificacao) {
+        return repository.atualizar(id, notificacao);
+    }
 }

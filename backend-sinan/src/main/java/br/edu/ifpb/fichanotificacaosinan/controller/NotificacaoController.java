@@ -35,4 +35,12 @@ public class NotificacaoController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Notificacao> atualizar(@PathVariable Long id,
+                                                 @RequestBody Notificacao notificacao) {
+        return service.atualizar(id, notificacao)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
