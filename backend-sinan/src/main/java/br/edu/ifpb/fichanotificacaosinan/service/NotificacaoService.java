@@ -25,4 +25,8 @@ public class NotificacaoService {
     public Optional<Notificacao> atualizar(Long id, Notificacao notificacao) {
         return repository.atualizar(id, notificacao);
     }
+
+    public boolean remover(Long id) {
+        return repository.remover(id);
+    }
 }
