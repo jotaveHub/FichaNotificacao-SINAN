@@ -2,52 +2,127 @@ package br.edu.ifpb.fichanotificacaosinan.model;
 
 import java.time.LocalDate;
 
+import br.edu.ifpb.fichanotificacaosinan.validation.ValoresPermitidos;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.edu.ifpb.fichanotificacaosinan.validation.Padroes;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
 public class Notificacao {
 
     private Long id;
 
     // Dados gerais
+    @NotBlank(message = "O número da notificação é obrigatório")
     private String numeroNotificacao;
+
+    @NotBlank(message = "O agravo/doença é obrigatório")
     private String agravo;
+
+    @Pattern(regexp = Padroes.CID10, message = "O código CID10 deve seguir o formato A90 ou B15.9")
     private String codigoCid10;
+
+    @Pattern(regexp = Padroes.UF, message = "UF inválida; use a sigla em maiúsculas, como PB")
+    private String ufNotificacao;   // com o @NotBlank acima, como já está
+
+    @Pattern(regexp = Padroes.SEXO, message = "O sexo deve ser M, F ou I")
+    private String sexo;            // com o @NotBlank acima
+
+    @Pattern(regexp = Padroes.CARTAO_SUS, message = "O cartão SUS deve ter 15 dígitos")
+    private String cartaoSus;
+
+    @Pattern(regexp = Padroes.UF, message = "UF inválida; use a sigla em maiúsculas, como PB")
+    private String ufInfeccao;
+
+    @Pattern(regexp = Padroes.CODIGO_IBGE, message = "O código IBGE deve ter 7 dígitos")
+    private String codigoIbgeMunicipioInfeccao;
+
+    @NotNull(message = "A data da notificação é obrigatória")
+    @PastOrPresent(message = "A data da notificação não pode ser futura")
     private LocalDate dataNotificacao;
-    private String ufNotificacao;
+
+
+    @NotBlank(message = "O município de notificação é obrigatório")
     private String municipioNotificacao;
+
+    @NotBlank(message = "A unidade de saúde é obrigatória")
     private String unidadeSaude;
+
     private String codigoUnidadeSaude;
+
+    @NotNull(message = "A data dos primeiros sintomas é obrigatória")
+    @PastOrPresent(message = "A data dos primeiros sintomas não pode ser futura")
     private LocalDate dataPrimeirosSintomas;
 
     // Dados do paciente
+    @NotBlank(message = "O nome do paciente é obrigatório")
     private String nomePaciente;
+
+    @PastOrPresent(message = "A data de nascimento não pode ser futura")
     private LocalDate dataNascimento;
+
+    @Min(value = 0, message = "A idade não pode ser negativa")
     private Integer idadeValor;
+
+    @Min(value = 1, message = "A unidade da idade deve ser de 1 a 4 (hora, dia, mês, ano)")
+    @Max(value = 4, message = "A unidade da idade deve ser de 1 a 4 (hora, dia, mês, ano)")
     private Integer idadeUnidade;
-    private String sexo;
+
+    @ValoresPermitidos(valores = {1, 2, 3, 4, 5, 6, 9},
+            message = "Gestante inválido; use 1 a 6 ou 9")
     private Integer gestante;
+
+    @ValoresPermitidos(valores = {1, 2, 3, 4, 5, 9},
+            message = "Raça/cor inválida; use 1 a 5 ou 9")
     private Integer racaCor;
+
+    @Min(value = 0, message = "A escolaridade deve ser de 0 a 10")
+    @Max(value = 10, message = "A escolaridade deve ser de 0 a 10")
     private Integer escolaridade;
-    private String cartaoSus;
+
     private String nomeMae;
 
     // Dados de residência
+    @Valid
     private DadosResidencia dadosResidencia;
 
     // Conclusão
+    @NotNull(message = "A data da investigação é obrigatória")
+    @PastOrPresent(message = "A data da investigação não pode ser futura")
     private LocalDate dataInvestigacao;
+
+    @Min(value = 1, message = "A classificação final deve ser 1 (confirmado) ou 2 (descartado)")
+    @Max(value = 2, message = "A classificação final deve ser 1 (confirmado) ou 2 (descartado)")
     private Integer classificacaoFinal;
+
+    @Min(value = 1, message = "O critério deve ser 1 (laboratorial) ou 2 (clínico-epidemiológico)")
+    @Max(value = 2, message = "O critério deve ser 1 (laboratorial) ou 2 (clínico-epidemiológico)")
     private Integer criterioConfirmacao;
+
+    @Min(value = 1, message = "Autóctone deve ser 1 (sim), 2 (não) ou 3 (indeterminado)")
+    @Max(value = 3, message = "Autóctone deve ser 1 (sim), 2 (não) ou 3 (indeterminado)")
     private Integer autoctone;
-    private String ufInfeccao;
+
+
     private String paisInfeccao;
     private String municipioInfeccao;
-    private String codigoIbgeMunicipioInfeccao;
+
+
     private String distritoInfeccao;
     private String bairroInfeccao;
+    @ValoresPermitidos(valores = {1, 2, 3, 9},
+            message = "Doença relacionada ao trabalho inválida; use 1, 2, 3 ou 9")
     private Integer doencaRelacionadaTrabalho;
+    @ValoresPermitidos(valores = {1, 2, 3, 9},
+            message = "Evolução do caso inválida; use 1, 2, 3 ou 9")
     private Integer evolucaoCaso;
-    private LocalDate dataObito;
-    private LocalDate dataEncerramento;
 
+    @PastOrPresent(message = "A data do óbito não pode ser futura")
+    private LocalDate dataObito;
+
+    @PastOrPresent(message = "A data de encerramento não pode ser futura")
+    private LocalDate dataEncerramento;
 
     // Investigador
     private String investigadorMunicipioUnidade;
@@ -376,5 +451,26 @@ public class Notificacao {
 
     public void setObservacoes(String observacoes) {
         this.observacoes = observacoes;
+    }
+
+    @JsonIgnore
+    @AssertTrue(message = "A data de nascimento não pode ser posterior à data da notificação")
+    public boolean isNascimentoValido() {
+        return dataNascimento == null || dataNotificacao == null
+                || !dataNascimento.isAfter(dataNotificacao);
+    }
+
+    @JsonIgnore
+    @AssertTrue(message = "A data dos primeiros sintomas não pode ser posterior à data da notificação")
+    public boolean isSintomasValidos() {
+        return dataPrimeirosSintomas == null || dataNotificacao == null
+                || !dataPrimeirosSintomas.isAfter(dataNotificacao);
+    }
+
+    @JsonIgnore
+    @AssertTrue(message = "A data de encerramento não pode ser anterior à data da notificação")
+    public boolean isEncerramentoValido() {
+        return dataEncerramento == null || dataNotificacao == null
+                || !dataEncerramento.isBefore(dataNotificacao);
     }
 }

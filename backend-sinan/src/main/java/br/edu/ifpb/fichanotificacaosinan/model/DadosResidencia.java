@@ -1,9 +1,15 @@
 package br.edu.ifpb.fichanotificacaosinan.model;
 
+import br.edu.ifpb.fichanotificacaosinan.validation.Padroes;
+import br.edu.ifpb.fichanotificacaosinan.validation.ValoresPermitidos;
+import jakarta.validation.constraints.Pattern;
+
 public class DadosResidencia {
 
+    @Pattern(regexp = Padroes.UF, message = "UF inválida; use a sigla em maiúsculas, como PB")
     private String uf;
     private String municipio;
+    @Pattern(regexp = Padroes.CODIGO_IBGE, message = "O código IBGE deve ter 7 dígitos")
     private String codigoIbge;
     private String distrito;
     private String bairro;
@@ -13,8 +19,11 @@ public class DadosResidencia {
     private String geoCampo1;
     private String geoCampo2;
     private String pontoReferencia;
+    @Pattern(regexp = Padroes.CEP, message = "CEP inválido; use o formato 58900-000 ou 58900000")
     private String cep;
     private String telefone;
+    @ValoresPermitidos(valores = {1, 2, 3, 9},
+            message = "Zona inválida; use 1 (urbana), 2 (rural), 3 (periurbana) ou 9 (ignorado)")
     private Integer zona;
     private String pais;
 

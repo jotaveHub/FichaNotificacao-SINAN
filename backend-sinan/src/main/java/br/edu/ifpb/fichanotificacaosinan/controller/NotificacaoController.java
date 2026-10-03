@@ -2,6 +2,7 @@ package br.edu.ifpb.fichanotificacaosinan.controller;
 
 import br.edu.ifpb.fichanotificacaosinan.model.Notificacao;
 import br.edu.ifpb.fichanotificacaosinan.service.NotificacaoService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,7 +20,7 @@ public class NotificacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<Notificacao> criar(@RequestBody Notificacao notificacao) {
+    public ResponseEntity<Notificacao> criar(@Valid @RequestBody Notificacao notificacao) {
         Notificacao criada = service.criar(notificacao);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -38,7 +39,7 @@ public class NotificacaoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Notificacao> atualizar(@PathVariable Long id,
-                                                 @RequestBody Notificacao notificacao) {
+                                                 @Valid @RequestBody Notificacao notificacao) {
         return service.atualizar(id, notificacao)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -51,4 +52,6 @@ public class NotificacaoController {
         }
         return ResponseEntity.notFound().build();
     }
+
+
 }
