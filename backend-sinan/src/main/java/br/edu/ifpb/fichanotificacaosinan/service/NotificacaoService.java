@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import br.edu.ifpb.fichanotificacaosinan.model.DadosResidencia;
 import java.time.LocalDate;
 import  java.util.List;
+import java.util.Set;
+
 import br.edu.ifpb.fichanotificacaosinan.util.Texto;
 
 @Service
@@ -45,9 +47,14 @@ public class NotificacaoService {
             notificacao.setGestante(6);
         }
     }
-
     public List<Notificacao> listar(FiltroNotificacao filtro) {
-        return repository.listarTodas().stream()
+        List<Notificacao> todas = repository.listarTodas();
+
+        Set<Long> idsDuplicados = filtro.duplicadas()
+                ? DetectorDuplicidade.idsDuplicados(todas)
+                : Set.of();
+
+        return todas.stream()
                 .filter(n -> Texto.contem(n.getNumeroNotificacao(), filtro.numeroNotificacao()))
                 .filter(n -> Texto.contem(n.getAgravo(), filtro.agravo()))
                 .filter(n -> Texto.contem(n.getNomePaciente(), filtro.nomePaciente()))
@@ -55,6 +62,7 @@ public class NotificacaoService {
                 .filter(n -> municipioConfere(n, filtro.municipioResidencia()))
                 .filter(n -> classificacaoConfere(n, filtro.classificacaoFinal()))
                 .filter(n -> periodoConfere(n, filtro.dataNotificacaoInicio(), filtro.dataNotificacaoFim()))
+                .filter(n -> !filtro.duplicadas() || idsDuplicados.contains(n.getId()))
                 .toList();
     }
 

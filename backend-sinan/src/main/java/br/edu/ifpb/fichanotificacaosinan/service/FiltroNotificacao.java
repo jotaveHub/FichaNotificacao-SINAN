@@ -10,5 +10,6 @@ public record FiltroNotificacao(
         String municipioResidencia,
         Integer classificacaoFinal,
         LocalDate dataNotificacaoInicio,
-        LocalDate dataNotificacaoFim) {
+        LocalDate dataNotificacaoFim,
+        boolean duplicadas) {
 }

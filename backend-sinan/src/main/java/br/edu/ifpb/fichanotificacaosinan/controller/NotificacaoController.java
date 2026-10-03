@@ -42,16 +42,17 @@ public class NotificacaoController {
             @RequestParam(required = false) String ufResidencia,
             @RequestParam(required = false) String municipioResidencia,
             @RequestParam(required = false) Integer classificacaoFinal,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataNotificacaoInicio,
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataNotificacaoFim) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataNotificacaoInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataNotificacaoFim,
+            @RequestParam(defaultValue = "false") boolean duplicadas) {
 
         FiltroNotificacao filtro = new FiltroNotificacao(
                 numeroNotificacao, agravo, nomePaciente, ufResidencia, municipioResidencia,
-                classificacaoFinal, dataNotificacaoInicio, dataNotificacaoFim);
+                classificacaoFinal, dataNotificacaoInicio, dataNotificacaoFim, duplicadas);
+
         return ResponseEntity.ok(service.listar(filtro));
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Notificacao> buscarPorId(@PathVariable Long id) {
