@@ -87,6 +87,7 @@ public class Notificacao {
     private String nomeMae;
 
     // Dados de residência
+    @NotNull(message = "Os dados de residência são obrigatórios")
     @Valid
     private DadosResidencia dadosResidencia;
 

@@ -1,9 +1,11 @@
 package br.edu.ifpb.fichanotificacaosinan.model;
 
 import br.edu.ifpb.fichanotificacaosinan.validation.Padroes;
+import br.edu.ifpb.fichanotificacaosinan.validation.ResidenciaValida;
 import br.edu.ifpb.fichanotificacaosinan.validation.ValoresPermitidos;
 import jakarta.validation.constraints.Pattern;
 
+@ResidenciaValida
 public class DadosResidencia {
 
     @Pattern(regexp = Padroes.UF, message = "UF inválida; use a sigla em maiúsculas, como PB")
