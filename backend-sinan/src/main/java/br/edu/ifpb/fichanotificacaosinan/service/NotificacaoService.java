@@ -4,6 +4,8 @@ import br.edu.ifpb.fichanotificacaosinan.exception.NotificacaoNaoEncontradaExcep
 import br.edu.ifpb.fichanotificacaosinan.model.Notificacao;
 import br.edu.ifpb.fichanotificacaosinan.repository.NotificacaoRepository;
 import org.springframework.stereotype.Service;
+import  java.util.List;
+import br.edu.ifpb.fichanotificacaosinan.util.Texto;
 
 @Service
 public class NotificacaoService {
@@ -40,5 +42,13 @@ public class NotificacaoService {
         if (notificacao.getGestante() == null) {
             notificacao.setGestante(6);
         }
+    }
+
+    public List<Notificacao> listar(FiltroNotificacao filtro) {
+        return repository.listarTodas().stream()
+                .filter(n -> Texto.contem(n.getNumeroNotificacao(), filtro.numeroNotificacao()))
+                .filter(n -> Texto.contem(n.getAgravo(), filtro.agravo()))
+                .filter(n -> Texto.contem(n.getNomePaciente(), filtro.nomePaciente()))
+                .toList();
     }
 }

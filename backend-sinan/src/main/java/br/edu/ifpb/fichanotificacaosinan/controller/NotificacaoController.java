@@ -1,6 +1,7 @@
 package br.edu.ifpb.fichanotificacaosinan.controller;
 
 import br.edu.ifpb.fichanotificacaosinan.model.Notificacao;
+import br.edu.ifpb.fichanotificacaosinan.service.FiltroNotificacao;
 import br.edu.ifpb.fichanotificacaosinan.service.NotificacaoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/notificacao")
@@ -30,6 +32,16 @@ public class NotificacaoController {
 
         return ResponseEntity.created(location).body(criada);
     }
+    @GetMapping
+    public ResponseEntity<List<Notificacao>> listar(
+            @RequestParam(required = false) String numeroNotificacao,
+            @RequestParam(required = false) String agravo,
+            @RequestParam(required = false) String nomePaciente) {
+
+        FiltroNotificacao filtro = new FiltroNotificacao(numeroNotificacao, agravo, nomePaciente);
+        return ResponseEntity.ok(service.listar(filtro));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Notificacao> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscarPorId(id));
@@ -46,5 +58,5 @@ public class NotificacaoController {
         service.remover(id);
         return ResponseEntity.noContent().build();
     }
-    
+
 }
