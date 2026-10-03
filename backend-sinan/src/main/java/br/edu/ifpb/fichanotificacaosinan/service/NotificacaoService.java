@@ -1,9 +1,9 @@
 package br.edu.ifpb.fichanotificacaosinan.service;
 
+import br.edu.ifpb.fichanotificacaosinan.exception.NotificacaoNaoEncontradaException;
 import br.edu.ifpb.fichanotificacaosinan.model.Notificacao;
 import br.edu.ifpb.fichanotificacaosinan.repository.NotificacaoRepository;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 
 @Service
 public class NotificacaoService {
@@ -18,15 +18,19 @@ public class NotificacaoService {
         return repository.salvar(notificacao);
     }
 
-    public Optional<Notificacao> buscarPorId(Long id) {
-        return repository.buscarPorId(id);
+    public Notificacao buscarPorId(Long id) {
+        return repository.buscarPorId(id)
+                .orElseThrow(() -> new NotificacaoNaoEncontradaException(id));
     }
 
-    public Optional<Notificacao> atualizar(Long id, Notificacao notificacao) {
-        return repository.atualizar(id, notificacao);
+    public Notificacao atualizar(Long id, Notificacao notificacao) {
+        return repository.atualizar(id, notificacao)
+                .orElseThrow(() -> new NotificacaoNaoEncontradaException(id));
     }
 
-    public boolean remover(Long id) {
-        return repository.remover(id);
+    public void remover(Long id) {
+        if (!repository.remover(id)) {
+            throw new NotificacaoNaoEncontradaException(id);
+        }
     }
 }
