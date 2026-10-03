@@ -4,6 +4,8 @@ import br.edu.ifpb.fichanotificacaosinan.exception.NotificacaoNaoEncontradaExcep
 import br.edu.ifpb.fichanotificacaosinan.model.Notificacao;
 import br.edu.ifpb.fichanotificacaosinan.repository.NotificacaoRepository;
 import org.springframework.stereotype.Service;
+import br.edu.ifpb.fichanotificacaosinan.model.DadosResidencia;
+import java.time.LocalDate;
 import  java.util.List;
 import br.edu.ifpb.fichanotificacaosinan.util.Texto;
 
@@ -49,6 +51,41 @@ public class NotificacaoService {
                 .filter(n -> Texto.contem(n.getNumeroNotificacao(), filtro.numeroNotificacao()))
                 .filter(n -> Texto.contem(n.getAgravo(), filtro.agravo()))
                 .filter(n -> Texto.contem(n.getNomePaciente(), filtro.nomePaciente()))
+                .filter(n -> ufConfere(n, filtro.ufResidencia()))
+                .filter(n -> municipioConfere(n, filtro.municipioResidencia()))
+                .filter(n -> classificacaoConfere(n, filtro.classificacaoFinal()))
+                .filter(n -> periodoConfere(n, filtro.dataNotificacaoInicio(), filtro.dataNotificacaoFim()))
                 .toList();
+    }
+
+    private boolean ufConfere(Notificacao n, String uf) {
+        if (Texto.vazio(uf)) {
+            return true;
+        }
+        DadosResidencia residencia = n.getDadosResidencia();
+        return residencia != null
+                && residencia.getUf() != null
+                && residencia.getUf().equalsIgnoreCase(uf.trim());
+    }
+
+    private boolean municipioConfere(Notificacao n, String municipio) {
+        if (Texto.vazio(municipio)) {
+            return true;
+        }
+        DadosResidencia residencia = n.getDadosResidencia();
+        return residencia != null && Texto.contem(residencia.getMunicipio(), municipio);
+    }
+
+    private boolean classificacaoConfere(Notificacao n, Integer classificacao) {
+        return classificacao == null || classificacao.equals(n.getClassificacaoFinal());
+    }
+
+    private boolean periodoConfere(Notificacao n, LocalDate inicio, LocalDate fim) {
+        LocalDate data = n.getDataNotificacao();
+        if (data == null) {
+            return inicio == null && fim == null;
+        }
+        return (inicio == null || !data.isBefore(inicio))
+                && (fim == null || !data.isAfter(fim));
     }
 }

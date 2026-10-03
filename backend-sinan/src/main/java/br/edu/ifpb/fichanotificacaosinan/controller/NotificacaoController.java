@@ -4,11 +4,13 @@ import br.edu.ifpb.fichanotificacaosinan.model.Notificacao;
 import br.edu.ifpb.fichanotificacaosinan.service.FiltroNotificacao;
 import br.edu.ifpb.fichanotificacaosinan.service.NotificacaoService;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -36,9 +38,18 @@ public class NotificacaoController {
     public ResponseEntity<List<Notificacao>> listar(
             @RequestParam(required = false) String numeroNotificacao,
             @RequestParam(required = false) String agravo,
-            @RequestParam(required = false) String nomePaciente) {
+            @RequestParam(required = false) String nomePaciente,
+            @RequestParam(required = false) String ufResidencia,
+            @RequestParam(required = false) String municipioResidencia,
+            @RequestParam(required = false) Integer classificacaoFinal,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataNotificacaoInicio,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataNotificacaoFim) {
 
-        FiltroNotificacao filtro = new FiltroNotificacao(numeroNotificacao, agravo, nomePaciente);
+        FiltroNotificacao filtro = new FiltroNotificacao(
+                numeroNotificacao, agravo, nomePaciente, ufResidencia, municipioResidencia,
+                classificacaoFinal, dataNotificacaoInicio, dataNotificacaoFim);
         return ResponseEntity.ok(service.listar(filtro));
     }
 
