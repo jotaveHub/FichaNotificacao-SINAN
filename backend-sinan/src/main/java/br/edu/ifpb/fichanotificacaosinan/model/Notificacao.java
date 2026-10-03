@@ -1,7 +1,9 @@
 package br.edu.ifpb.fichanotificacaosinan.model;
 
 import java.time.LocalDate;
+import java.time.Period;
 
+import br.edu.ifpb.fichanotificacaosinan.validation.IdadeEGestanteValidos;
 import br.edu.ifpb.fichanotificacaosinan.validation.ValoresPermitidos;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -9,6 +11,7 @@ import br.edu.ifpb.fichanotificacaosinan.validation.Padroes;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
+@IdadeEGestanteValidos
 public class Notificacao {
 
     private Long id;
@@ -111,9 +114,11 @@ public class Notificacao {
 
     private String distritoInfeccao;
     private String bairroInfeccao;
-    @ValoresPermitidos(valores = {1, 2, 3, 9},
-            message = "Doença relacionada ao trabalho inválida; use 1, 2, 3 ou 9")
+
+    @ValoresPermitidos(valores = {1, 2, 9},
+            message = "Doença relacionada ao trabalho inválida; use 1, 2 ou 9")
     private Integer doencaRelacionadaTrabalho;
+
     @ValoresPermitidos(valores = {1, 2, 3, 9},
             message = "Evolução do caso inválida; use 1, 2, 3 ou 9")
     private Integer evolucaoCaso;
@@ -472,5 +477,19 @@ public class Notificacao {
     public boolean isEncerramentoValido() {
         return dataEncerramento == null || dataNotificacao == null
                 || !dataEncerramento.isBefore(dataNotificacao);
+    }
+
+    public Integer idadeEmAnos() {
+        if (dataNascimento != null) {
+            LocalDate referencia = dataNotificacao != null ? dataNotificacao : LocalDate.now();
+            if (dataNascimento.isAfter(referencia)) {
+                return null;
+            }
+            return Period.between(dataNascimento, referencia).getYears();
+        }
+        if (idadeValor != null && idadeUnidade != null) {
+            return idadeUnidade == 4 ? idadeValor : 0;
+        }
+        return null;
     }
 }

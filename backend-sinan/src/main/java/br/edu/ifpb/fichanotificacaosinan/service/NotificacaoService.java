@@ -15,6 +15,7 @@ public class NotificacaoService {
     }
 
     public Notificacao criar(Notificacao notificacao) {
+        aplicarPadroes(notificacao);
         return repository.salvar(notificacao);
     }
 
@@ -24,6 +25,7 @@ public class NotificacaoService {
     }
 
     public Notificacao atualizar(Long id, Notificacao notificacao) {
+        aplicarPadroes(notificacao);
         return repository.atualizar(id, notificacao)
                 .orElseThrow(() -> new NotificacaoNaoEncontradaException(id));
     }
@@ -31,6 +33,12 @@ public class NotificacaoService {
     public void remover(Long id) {
         if (!repository.remover(id)) {
             throw new NotificacaoNaoEncontradaException(id);
+        }
+    }
+
+    private void aplicarPadroes(Notificacao notificacao) {
+        if (notificacao.getGestante() == null) {
+            notificacao.setGestante(6);
         }
     }
 }
