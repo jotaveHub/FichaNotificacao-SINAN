@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SINAN - Consulta de notificações</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <h1>SINAN - Notificações</h1>
+    <a href="index.html">Consulta</a>
+    <a href="cadastro.html">Nova notificação</a>
+</header>
+
+<main>
+    <div id="mensagem"></div>
+
+    <form id="filtros">
+        <fieldset>
+            <legend>Filtros</legend>
+            <div class="grade">
+                <label>N.º da notificação <input name="numeroNotificacao"></label>
+                <label>Agravo/doença <input name="agravo"></label>
+                <label>Paciente <input name="nomePaciente"></label>
+                <label>UF de residência <input name="ufResidencia" maxlength="2" placeholder="PB"></label>
+                <label>Município de residência <input name="municipioResidencia"></label>
+                <label>Classificação final
+                    <select name="classificacaoFinal">
+                        <option value="">Todas</option>
+                        <option value="1">Confirmado</option>
+                        <option value="2">Descartado</option>
+                    </select>
+                </label>
+                <label>Notificação de <input type="date" name="dataNotificacaoInicio"></label>
+                <label>Notificação até <input type="date" name="dataNotificacaoFim"></label>
+                <label class="caixa">
+                    <input type="checkbox" id="duplicadas"> Somente notificações duplicadas
+                </label>
+            </div>
+            <div class="acoes">
+                <button type="submit">Filtrar</button>
+                <button type="button" class="secundario" id="limpar">Limpar</button>
+            </div>
+        </fieldset>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>N.º</th>
+            <th>Agravo</th>
+            <th>Data da notificação</th>
+            <th>Paciente</th>
+            <th>Nascimento</th>
+            <th>Mãe</th>
+            <th>Município</th>
+            <th>Classificação</th>
+            <th>Alterar</th>
+            <th>Excluir</th>
+        </tr>
+        </thead>
+        <tbody id="corpo-tabela"></tbody>
+    </table>
+</main>
+
+<script src="../js/api.js"></script>
+<script src="../js/consulta.js"></script>
+</body>
+</html>
