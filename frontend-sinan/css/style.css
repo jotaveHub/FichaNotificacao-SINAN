@@ -53,4 +53,65 @@ th, td { padding: 8px 10px; border-bottom: 1px solid #e3e8ec; text-align: left; 
 th { background: #eef3f8; }
 
 .alerta { padding: 10px 14px; border-radius: 4px; margin-bottom: 12px; }
-.alerta.erro { background: #fdecea; color: #8a1c1c; }
+.alerta.erro { background: #fdecea; color: #8a1c1c;
+
+    .invalido { border-color: #c62828; background: #fff5f5; }
+    .msg-campo { color: #c62828; font-size: 12px; }
+    .botao.secundario { background: #6b7782; }
+
+    .ficha { background: #fff; border: 2px solid #222; max-width: 1000px; margin: 0 auto 16px; }
+
+    .cabecalho-ficha {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 10px 14px;
+        border-bottom: 2px solid #222;
+        font-size: 12px;
+    }
+    .titulo-ficha { text-align: center; flex: 1; }
+    .numero-ficha { width: 220px; }
+
+    .secao { display: flex; border-bottom: 2px solid #222; }
+    .faixa {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        background: #e3e3e3;
+        padding: 8px 6px;
+        font-weight: 700;
+        font-size: 12px;
+        text-align: center;
+    }
+    .conteudo { flex: 1; border-left: 2px solid #222; min-width: 0; }
+
+    .linha { display: grid; grid-template-columns: repeat(12, 1fr); }
+    .campo {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding: 4px 6px 6px;
+        border-right: 1px solid #999;
+        border-bottom: 1px solid #999;
+        font-size: 12px;
+        min-width: 0;
+    }
+    .rotulo { font-weight: 600; }
+    .num {
+        display: inline-block;
+        border: 1px solid #222;
+        background: #fff;
+        padding: 0 4px;
+        margin-right: 4px;
+        font-size: 11px;
+    }
+    .obr { color: #c62828; font-style: normal; margin-left: 2px; }
+    .dica { display: block; font-weight: 400; color: #666; }
+    .fixo { padding: 6px 8px; background: #f0f0f0; border: 1px solid #aab4be; border-radius: 4px; }
+    .subtitulo { background: #e3e3e3; font-weight: 700; padding: 4px 8px; border-bottom: 1px solid #999; font-size: 13px; }
+    .ficha .acoes { padding: 12px 14px; }
+
+    @media (max-width: 800px) {
+        .campo { grid-column: span 12 !important; }
+    }
+}
