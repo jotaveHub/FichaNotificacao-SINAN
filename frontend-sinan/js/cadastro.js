@@ -135,6 +135,7 @@ const SECOES = [
 
 const formulario = document.getElementById('formulario');
 const mensagem = document.getElementById('mensagem');
+const id = new URLSearchParams(window.location.search).get('id');
 
 function criarControle(campo) {
     if (campo.tipo === 'select') {
@@ -166,7 +167,7 @@ function montarFormulario() {
         </fieldset>
     `).join('') + `
         <div class="acoes">
-            <button type="submit">Cadastrar</button>
+                        <button type="submit">${id ? 'Salvar alterações' : 'Cadastrar'}</button>
             <a class="botao secundario" href="index.html">Cancelar</a>
         </div>
     `;
@@ -226,11 +227,35 @@ formulario.addEventListener('submit', async evento => {
     evento.preventDefault();
     limparErros();
     try {
-        await requisitar(API_URL, {method: 'POST', body: JSON.stringify(lerFormulario())});
+        await requisitar(id ? `${API_URL}/${id}` : API_URL, {
+            method: id ? 'PUT' : 'POST',
+            body: JSON.stringify(lerFormulario())
+        });
         window.location.href = 'index.html';
     } catch (erro) {
         mostrarErros(erro);
     }
 });
 
+function obterValor(objeto, caminho) {
+    return caminho.split('.').reduce((atual, parte) => atual?.[parte], objeto);
+}
+
+async function carregarParaEdicao() {
+    document.getElementById('titulo').textContent = `Alterar notificação nº ${id}`;
+    try {
+        const notificacao = await requisitar(`${API_URL}/${id}`);
+        for (const secao of SECOES) {
+            for (const campo of secao.campos) {
+                formulario.elements[campo.nome].value = obterValor(notificacao, campo.nome) ?? '';
+            }
+        }
+    } catch (erro) {
+        mostrarErros(erro);
+    }
+}
+
 montarFormulario();
+if (id) {
+    carregarParaEdicao();
+}
